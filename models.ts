@@ -148,7 +148,7 @@ export class Blueprint {
       const firstRobotValue = Object.values(Material).findIndex((val) => val === firstRobot.miningMaterial)
       const secondRobotValue = Object.values(Material).findIndex((val) => val === secondRobot.miningMaterial)
 
-      return firstRobotValue - secondRobotValue
+      return secondRobotValue - firstRobotValue
     })
   }
 

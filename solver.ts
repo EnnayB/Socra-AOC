@@ -1,6 +1,6 @@
 import Game from './game'
 import Queue from 'queue-fifo'
-import { Blueprint, RobotCost } from './models'
+import { Blueprint, Material, RobotCost } from './models'
 
 export default class Solver {
   private blueprints: Blueprint[]
@@ -27,17 +27,24 @@ export default class Solver {
     let currentBest = 0
     while (!gameQueue.isEmpty()) {
       game = gameQueue.dequeue() as Game
-      console.log(game.toString())
 
       if (game.isOver()) {
         const currentGeodeNumber = game.getGeodeNumber()
         currentBest = currentGeodeNumber > currentBest ? currentGeodeNumber : currentBest
+      }
+      else if (game.remainingTurns() === 1) {
+        enqueueGame(game)
       }
       else {
         const affordableRobots = blueprint.getAffordableRobots(game.inventory)
         let shouldWait = true
 
         for (const robot of affordableRobots) {
+          if (robot.miningMaterial === Material.GEODE || robot.miningMaterial === Material.OBSIDIAN) {
+            enqueueGame(game, robot)
+            shouldWait = false
+            break
+          }
           if (game.isRobotValuable(robot)) {
             enqueueGame(game, robot)
             shouldWait = false
