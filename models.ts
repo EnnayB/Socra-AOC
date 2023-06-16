@@ -3,6 +3,7 @@ export enum Material {
   CLAY = "CLAY",
   OBSIDIAN = "OBSIDIAN",
   GEODE = "GEODE",
+  DIAMOND = "DIAMOND",
 }
 
 export type MaterialCount = {
@@ -21,6 +22,7 @@ export class MaterialList {
       CLAY: 0,
       OBSIDIAN: 0,
       GEODE: 0,
+      DIAMOND: 0,
     }
   }
 
@@ -124,6 +126,7 @@ export class Blueprint {
         CLAY: new RobotCost(Material.CLAY, new MaterialList()),
         OBSIDIAN: new RobotCost(Material.OBSIDIAN, new MaterialList()),
         GEODE: new RobotCost(Material.GEODE, new MaterialList()),
+        DIAMOND: new RobotCost(Material.GEODE, new MaterialList()),
       }
     }
     else {
@@ -158,6 +161,7 @@ export class Blueprint {
       CLAY: 0,
       OBSIDIAN: 0,
       GEODE: 0,
+      DIAMOND: 0,
     }
 
     for (const robot of Object.values(this.robotsCosts)) {

@@ -1,7 +1,8 @@
 import { readFileSync } from 'fs'
+
 import { Blueprint, Material, MaterialList, RobotCost } from './models'
 
-const ROBOT_COST_REGEX = /Each (?<RobotMaterial>\w+) robot costs (?<FirstQuantity>\d+) (?<FirstMaterial>\w+)(?: and (?<SecondQuantity>\d+) (?<SecondMaterial>\w+))?/
+const ROBOT_COST_REGEX = /Each (?<RobotMaterial>\w+) robot costs (?<FirstQuantity>\d+) (?<FirstMaterial>\w+)(?:(?:, (?<ExtraQuantity>\d+) (?<ExtraMaterial>\w+))? and (?<SecondQuantity>\d+) (?<SecondMaterial>\w+))?/
 
 export default class Parser {
   private content: string
@@ -15,17 +16,24 @@ export default class Parser {
     if (match === null || match.groups === undefined) {
       throw Error('Could not parse Robot Cost')
     }
+
     const robotMaterial = match.groups['RobotMaterial']?.toUpperCase() as Material
     const firstQuantity = Number(match.groups['FirstQuantity'])
     const secondQuantity = Number(match.groups['SecondQuantity'])
+    const thirdQuantity = Number(match.groups['ThirdQuantity'])
     const firstMaterial = match.groups['FirstMaterial']?.toUpperCase() as Material
     const secondMaterial = match.groups['SecondMaterial']?.toUpperCase() as Material
+    const thirdMaterial = match.groups['ThirdMaterial']?.toUpperCase() as Material
 
     const robotCostMaterials: MaterialList = new MaterialList()
 
     robotCostMaterials.setMaterialQuantity(firstMaterial, firstQuantity)
     if (secondMaterial !== undefined) {
       robotCostMaterials.setMaterialQuantity(secondMaterial, secondQuantity)
+    }
+
+    if (thirdMaterial !== undefined) {
+      robotCostMaterials.setMaterialQuantity(thirdMaterial, thirdQuantity)
     }
 
     return new RobotCost(robotMaterial, robotCostMaterials)

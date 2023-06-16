@@ -17,6 +17,7 @@ export default class Game {
       CLAY: 0,
       OBSIDIAN: 0,
       GEODE: 0,
+      DIAMOND: 0,
     }
     this.inventory = new Inventory()
   }
@@ -46,20 +47,22 @@ export default class Game {
   }
 
   public buyRobot(robot: RobotCost): boolean {
+    const isOver = this.nextTurn()
+    this.inventory.buyRobot(robot)
     this.robotsCount[robot.miningMaterial] += 1
-    return this.nextTurn()
+    return isOver
   }
 
   public isRobotValuable(robot: Robot): boolean {
-    if (robot.miningMaterial == Material.GEODE) {
+    if (robot.miningMaterial == Material.DIAMOND) {
       return true
     }
 
     return this.materialCap[robot.miningMaterial] > this.robotsCount[robot.miningMaterial]
   }
 
-  public getGeodeNumber(): number {
-    return this.inventory.getMaterialQuantity(Material.GEODE)
+  public getDiamondNumber(): number {
+    return this.inventory.getMaterialQuantity(Material.DIAMOND)
   }
 
   public copy(): Game {
@@ -69,6 +72,10 @@ export default class Game {
     copyGame.inventory = this.inventory.copy()
 
     return copyGame
+  }
+
+  public getRobotQuantity(material: Material): number {
+    return this.robotsCount[material]
   }
 
   public toString(): string {
